@@ -1,1 +1,23 @@
 # Logger
+
+This application is to test a simple log class (static) for bigger projects.
+
+Use:
+- Copy all the content of the folder Classes in your project.
+- Add a reference of the namespace in your project: `using glitcher.core.Logger;`
+- Where is needed call the static method to add the message to the logger:
+
+```cs
+Logger.Add(LogLevel.Error, "Group", "Message", "Whisper (Extra information)");
+```
+---
+
+### Screenshot of the Logger itselt
+![Logger](readme_img_logger.png?raw=true "Logger")
+
+---
+
+### Screenshot of the Logger Tester Form
+![Logger Tester](readme_img_loggertester.png?raw=true "Logger Tester")
+
+---
