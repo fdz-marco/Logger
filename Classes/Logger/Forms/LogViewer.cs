@@ -1,6 +1,7 @@
 ﻿using glitcher.core.Utils;
+using System.Windows.Forms;
 
-namespace glitcher.core.Logger
+namespace glitcher.core
 {
     /// <summary>(Form) Log Viewer</summary>
     /// <remarks>
@@ -144,8 +145,10 @@ namespace glitcher.core.Logger
 
         /// <summary>In case the Logger Notify a change ocurred, execute some actions on Form/Window.</summary>
         /// <returns>(void)</returns>
-        private void Logger_ChangeOccurred(object? sender, LogEvent e)
+        private async void Logger_ChangeOccurred(object? sender, LogEvent e)
         {
+            if (_instance == null)
+                return;
             if (e.eventType == "clear")
             {
                 lv_Log.Items.Clear();
@@ -159,8 +162,8 @@ namespace glitcher.core.Logger
                     //lv_Log.Items.Insert(0, logItem); // Add at Top
                     //lvLog.Items.Add(logitem); // Add at Bottom
                     //lv_Log.Update();
-                    lv_Log.CallMethod((ctrl, value) => ctrl.Items.Insert(0, value), logItem); // SafeThread Call
-                    lv_Log.CallMethod((ctrl) => ctrl.Update()); // SafeThread Call
+                    await lv_Log.CallMethodAsync((ctrl, value) => ctrl.Items.Insert(0, value), logItem); // SafeThread Call
+                    await lv_Log.CallMethodAsync((ctrl) => ctrl.Update()); // SafeThread Call
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace glitcher.core.Logger
+﻿namespace glitcher.core
 {
     partial class LogViewer
     {

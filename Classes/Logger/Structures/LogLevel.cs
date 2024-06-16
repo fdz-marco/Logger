@@ -1,4 +1,4 @@
-﻿namespace glitcher.core.Logger
+﻿namespace glitcher.core
 {
     /// <summary>(Enumerator) Log Level</summary>
     /// <remarks>

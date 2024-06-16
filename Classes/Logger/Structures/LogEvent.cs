@@ -1,4 +1,4 @@
-﻿namespace glitcher.core.Logger
+﻿namespace glitcher.core
 {
     /// <summary>(Object Definition) Log Event (EventArgs)</summary>
     /// <remarks>

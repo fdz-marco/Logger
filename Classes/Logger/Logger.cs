@@ -1,4 +1,4 @@
-﻿namespace glitcher.core.Logger
+﻿namespace glitcher.core
 {
     /// <summary>(Class: Static~Global) Simple Logger</summary>
     /// <remarks>

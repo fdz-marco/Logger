@@ -1,4 +1,4 @@
-using glitcher.core.Logger;
+using glitcher.core;
 
 namespace LoggerTester
 {

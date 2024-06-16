@@ -1,14 +1,14 @@
 ﻿namespace glitcher.core.Utils
 {
+
     /// <summary>
     /// **Controls - Extension Methods**
     /// Add the posibility to update controls in the UI from different threads/async tasks in a safe way.
     /// </summary>
     /// <remarks>
     /// Author: Marco Fernandez (marcofdz.com / glitcher.dev)<br/>
-    /// Last modified: 2024.06.15 - June 15, 2024
+    /// Last modified: 2024.06.16 - June 16, 2024
     /// </remarks>
-
     public static class ControlExtensions
     {
 
@@ -25,11 +25,7 @@
         /// <param name="updateAction">Update function: (ctrl,value) => { }</param>
         /// <returns>(void)</returns>
         public static void UpdateProperty<TControl, TProperty>
-            (
-                this TControl control,
-                Action<TControl, TProperty> updateAction,
-                TProperty value
-            ) where TControl : Control
+            (this TControl control, Action<TControl, TProperty> updateAction, TProperty value) where TControl : Control
         {
             if (control.InvokeRequired)
             {
@@ -52,20 +48,17 @@
         /// <param name="updateAction">Update function: (ctrl,value) => { }</param>
         /// <returns>(Task)</returns>
         public static Task UpdatePropertyAsync<TControl, TProperty>
-            (
-                this TControl control,
-                Action<TControl, TProperty> updateAction,
-                TProperty value
-            ) where TControl : Control
+            (this TControl control, Action<TControl, TProperty> updateAction, TProperty value) where TControl : Control
         {
-            //if (control.InvokeRequired)
-            //{
+            if (control.InvokeRequired)
+            {
+                return Task.Run(() => control.InvokeAsync(new Action(() => updateAction(control, value))));
+            }
+            else
+            {
                 return Task.Run(() => control.Invoke(new Action(() => updateAction(control, value))));
-            //}
-            //else
-            //{
                 //return Task.Run(() => updateAction(control, value));
-            //}
+            }
         }
 
         // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -80,10 +73,7 @@
         /// <param name="methodAction">Function: (ctrl) => { }</param>
         /// <returns>(void)</returns>
         public static void CallMethod<TControl>
-            (
-                this TControl control,
-                Action<TControl> methodAction
-            ) where TControl : Control
+            (this TControl control, Action<TControl> methodAction) where TControl : Control
         {
             if (control.InvokeRequired)
             {
@@ -105,21 +95,20 @@
         /// <param name="methodAction">Function: (ctrl) => { }</param>
         /// <returns>(Task)</returns>
         public static Task CallMethodAsync<TControl>
-            (
-                this TControl control, 
-                Action<TControl> methodAction
-            ) where TControl : Control
+            (this TControl control, Action<TControl> methodAction) where TControl : Control
         {
-            //if (control.InvokeRequired)
-            //{
+            if (control.InvokeRequired)
+            {
+                return Task.Run(() => control.InvokeAsync(new Action(() => methodAction(control))));
+            }
+            else
+            {
+                if (control.Parent == null)
+                    return Task.Run(() => { });
                 return Task.Run(() => control.Invoke(new Action(() => methodAction(control))));
-            //}
-            //else
-            //{
                 //return Task.Run(() => methodAction(control));
-            //}
+            }
         }
-
 
         // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -134,11 +123,7 @@
         /// <param name="arg">Argument</param>
         /// <returns>(void)</returns>
         public static void CallMethod<TControl, TArg>
-            (
-                this TControl control,
-                Action<TControl, TArg> methodAction,
-                TArg arg
-            ) where TControl : Control
+            (this TControl control, Action<TControl, TArg> methodAction, TArg arg) where TControl : Control
         {
             if (control.InvokeRequired)
             {
@@ -161,23 +146,38 @@
         /// <param name="arg">Argument</param>
         /// <returns>(Task)</returns>
         public static Task CallMethodAsync<TControl, TArg>
-            (
-                this TControl control,
-                Action<TControl, TArg> methodAction,
-                TArg arg
-            ) where TControl : Control
+            (this TControl control, Action<TControl, TArg> methodAction, TArg arg) where TControl : Control
         {
-            //if (control.InvokeRequired)
-            //{
+            if (control.InvokeRequired)
+            {
+                return Task.Run(() => control.InvokeAsync(new Action(() => methodAction(control, arg))));
+            }
+            else
+            {
+                if (control.Parent == null)
+                    return Task.Run(() => { });
                 return Task.Run(() => control.Invoke(new Action(() => methodAction(control, arg))));
-            //}
-            //else
-            //{
                 //return Task.Run(() => methodAction(control, arg));
-            //}
+            }
         }
 
         // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
+        /// <summary>Invoke Async (Asynchronous).</summary>
+        /// <param name="control">Reference to Control.</param>
+        /// <param name="methodAction">Function to execute on asynchronious Invoke.</param>
+        public static async Task InvokeAsync(this Control control, Action methodAction)
+        {
+            if (control.InvokeRequired)
+            {
+                await Task.Run(() => control.Invoke(methodAction));
+            }
+            else
+            {
+                methodAction();
+            }
+        }
+
+        // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
     }
 }
