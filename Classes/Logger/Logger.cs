@@ -50,21 +50,21 @@
         /// <returns>(void)</returns>
         public static void Add(LogLevel level, string group, string message, string whisper = "")
         {
-            if (disabled) 
+            if (disabled)
                 return;
 
             LogEntry log = new LogEntry();
             log.DateTime = DateTime.Now;
-            log.LogLevel = level; 
+            log.LogLevel = level;
             log.Group = group;
             log.Message = message;
             log.Whisper = whisper;
 
             var stackFrame = new System.Diagnostics.StackTrace().GetFrame(1);
-            var methodInfo = (stackFrame != null) ? stackFrame.GetMethod() : null; 
+            var methodInfo = (stackFrame != null) ? stackFrame.GetMethod() : null;
             var className = (methodInfo?.ReflectedType != null) ? methodInfo.ReflectedType.FullName : null;
             log.Caller = (className != null) ? className : "";
-            
+
             string debugMsg = $"[{log.DateTime}][{log.LogLevel}][{log.Group}] {log.Message}";
             debugMsg += string.IsNullOrEmpty(log.Whisper) ? string.Empty : $" ({log.Whisper})";
             debugMsg += includeCaller ? $" <{log.Caller}>" : string.Empty;
